@@ -38,10 +38,10 @@ let rec ternary_search ~f n left right =
   let (left, right) = if y1 < y2 then (mid1, right) else (left, mid2) in
   if n = 0 then (left +. right) /. 2. else ternary_search ~f (n - 1) left right
 
-let map_estimate ~in_filename () =
+let mle_calc ~in_filename () =
   let%map samples = extract_samples ~in_filename in
   ternary_search 1000 0. 1. ~f:(fun p -> log_prob p samples)
-|> printf "MAP estimation: %f\n"
+|> printf "MLE: %f\n"
 
 let input_filename_param =
   let open Command.Param in
@@ -57,15 +57,15 @@ let plot_command =
   in
   plot ~left ~right ~n ~in_filename ~out_filename
 
-let map_estimate_command =
+let mle_calc_command =
   let open Command.Let_syntax in
   let%map_open in_filename = input_filename_param in
-  map_estimate ~in_filename
+  mle_calc ~in_filename
 
 let () =
   let commands =
     [ ("plot", plot_command, "plot distribution of p")
-    ; ("map", map_estimate_command, "estimate p with MAP")
+    ; ("mle", mle_calc_command, "estimate p with MLE")
     ]
     |> List.map ~f:(fun (name, cmd, summary) ->
         (name, Command.async cmd ~summary)
