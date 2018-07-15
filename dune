@@ -1,4 +1,4 @@
 (executable
  (name sushi)
- (libraries core async bignum gnuplot)
+ (libraries core async gnuplot)
  (preprocess (pps ppx_jane)))
